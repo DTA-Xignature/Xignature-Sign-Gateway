@@ -76,6 +76,13 @@ if "%API_KEY%"=="" (
   goto read_api_key
 )
 
+:read_password
+set /p PASSWORD=PASSWORD (basic auth admin): 
+if "%PASSWORD%"=="" (
+  echo Value is required.
+  goto read_password
+)
+
 set /p RUNTIME_ENV=ENV [STAGING]: 
 if "%RUNTIME_ENV%"=="" set RUNTIME_ENV=STAGING
 
@@ -90,7 +97,7 @@ docker volume create %VOLUME_NAME% >nul
 
 docker rm -f %CONTAINER_NAME% >nul 2>nul
 
-for /f %%i in ('docker run -d --name %CONTAINER_NAME% --platform %PLATFORM% -e API_URL=%API_URL% -e API_KEY=%API_KEY% -e ENV=%RUNTIME_ENV% -v %VOLUME_NAME%:/data -p %HOST_PORT%:1303 %IMAGE_NAME%') do set CONTAINER_ID=%%i
+for /f %%i in ('docker run -d --name %CONTAINER_NAME% --platform %PLATFORM% -e API_URL=%API_URL% -e API_KEY=%API_KEY% -e PASSWORD=%PASSWORD% -e ENV=%RUNTIME_ENV% -v %VOLUME_NAME%:/data -p %HOST_PORT%:1303 %IMAGE_NAME%') do set CONTAINER_ID=%%i
 
 echo Install complete.
 echo Container ID: %CONTAINER_ID%
