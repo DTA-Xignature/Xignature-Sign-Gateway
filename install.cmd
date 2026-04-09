@@ -1,5 +1,5 @@
 @echo off
-setlocal enabledelayedexpansion
+setlocal DisableDelayedExpansion
 
 set ROOT_DIR=%~dp0\..\..
 pushd "%ROOT_DIR%" >nul
@@ -18,6 +18,14 @@ if errorlevel 1 (
 docker info >nul 2>nul
 if errorlevel 1 (
   echo Error: Docker daemon is not running or not accessible.
+  popd >nul
+  exit /b 1
+)
+
+for /f "usebackq delims=" %%i in (`docker info --format "{{.OSType}}" 2^>nul`) do set DOCKER_OSTYPE=%%i
+if /i not "%DOCKER_OSTYPE%"=="linux" (
+  echo Error: Docker is running in Windows container mode. Switch Docker Desktop to Linux containers and try again.
+  echo Hint: Right-click Docker Desktop tray icon and select "Switch to Linux containers..."
   popd >nul
   exit /b 1
 )
@@ -97,7 +105,7 @@ docker volume create %VOLUME_NAME% >nul
 
 docker rm -f %CONTAINER_NAME% >nul 2>nul
 
-for /f %%i in ('docker run -d --name %CONTAINER_NAME% --platform %PLATFORM% -e API_URL=%API_URL% -e API_KEY=%API_KEY% -e PASSWORD=%PASSWORD% -e ENV=%RUNTIME_ENV% -v %VOLUME_NAME%:/data -p %HOST_PORT%:1303 %IMAGE_NAME%') do set CONTAINER_ID=%%i
+for /f %%i in ('docker run -d --name %CONTAINER_NAME% --platform %PLATFORM% -e "API_URL=%API_URL%" -e "API_KEY=%API_KEY%" -e "PASSWORD=%PASSWORD%" -e "ENV=%RUNTIME_ENV%" -v %VOLUME_NAME%:/data -p %HOST_PORT%:1303 %IMAGE_NAME%') do set CONTAINER_ID=%%i
 
 echo Install complete.
 echo Container ID: %CONTAINER_ID%
