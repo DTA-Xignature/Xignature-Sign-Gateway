@@ -63,6 +63,7 @@ CONTAINER_NAME="$(prompt_default "Container name" "sign-gateway")"
 HOST_PORT="$(prompt_default "Host port" "1303")"
 API_URL="$(prompt_default "API_URL" "https://api.xignature.dev")"
 API_KEY="$(prompt_required "API_KEY")"
+PASSWORD="$(prompt_required "PASSWORD (basic auth admin)")"
 RUNTIME_ENV="$(prompt_default "ENV" "STAGING")"
 VOLUME_NAME="$(prompt_default "Docker volume for SQLite" "sign-gateway-sqlite")"
 PLATFORM="$(prompt_default "Docker platform" "linux/amd64")"
@@ -77,6 +78,7 @@ CONTAINER_ID="$(docker run -d \
   --platform "$PLATFORM" \
   -e API_URL="$API_URL" \
   -e API_KEY="$API_KEY" \
+  -e PASSWORD="$PASSWORD" \
   -e ENV="$RUNTIME_ENV" \
   -v "$VOLUME_NAME:/data" \
   -p "$HOST_PORT:1303" \
