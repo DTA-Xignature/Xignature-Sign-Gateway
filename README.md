@@ -51,8 +51,8 @@ If a check fails, the script exits with an error and no deployment changes are m
 Run from repository root:
 
 ```bash
-chmod +x scripts/install/install.sh
-./scripts/install/install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 ## Windows PowerShell
@@ -60,7 +60,7 @@ chmod +x scripts/install/install.sh
 Run from repository root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install\install.ps1
+powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
 If script execution is blocked, use the command above or configure your execution policy appropriately.
@@ -70,7 +70,7 @@ If script execution is blocked, use the command above or configure your executio
 Run from repository root:
 
 ```cmd
-scripts\install\install.cmd
+install.cmd
 ```
 
 ## After Installation
