@@ -68,6 +68,7 @@ $containerName = Read-DefaultValue "Container name" "sign-gateway"
 $hostPort = Read-DefaultValue "Host port" "1303"
 $apiUrl = Read-DefaultValue "API_URL" "https://api.xignature.dev"
 $apiKey = Read-RequiredValue "API_KEY"
+$password = Read-RequiredValue "PASSWORD (basic auth admin)"
 $runtimeEnv = Read-DefaultValue "ENV" "STAGING"
 $volumeName = Read-DefaultValue "Docker volume for SQLite" "sign-gateway-sqlite"
 $platform = Read-DefaultValue "Docker platform" "linux/amd64"
@@ -82,6 +83,7 @@ $containerId = docker run -d `
   --platform $platform `
   -e API_URL=$apiUrl `
   -e API_KEY=$apiKey `
+    -e PASSWORD=$password `
   -e ENV=$runtimeEnv `
   -v "${volumeName}:/data" `
     -p "${hostPort}:1303" `
