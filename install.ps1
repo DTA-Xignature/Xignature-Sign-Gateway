@@ -44,6 +44,11 @@ try {
     Write-Error "Docker daemon is not running or not accessible."
 }
 
+$dockerOsType = (docker info --format "{{.OSType}}" 2>$null).Trim()
+if ($dockerOsType -ne "linux") {
+    Write-Error "Docker is running in Windows container mode. Switch Docker Desktop to Linux containers and try again."
+}
+
 Write-Host "Docker prerequisites check passed." -ForegroundColor Green
 
 $registryHost = Read-DefaultValue "Docker registry host" "registry.xignature.co.id"
