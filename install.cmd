@@ -77,6 +77,9 @@ if "%HOST_PORT%"=="" set HOST_PORT=1303
 set /p API_URL=API_URL [https://api.xignature.dev]: 
 if "%API_URL%"=="" set API_URL=https://api.xignature.dev
 
+set /p TSA_URL=TSA_URL [http://tsa.xignature.co.id/signserver/process?workerName=DtaTsa]: 
+if "%TSA_URL%"=="" set TSA_URL=http://tsa.xignature.co.id/signserver/process?workerName=DtaTsa
+
 :read_api_key
 set /p API_KEY=API_KEY: 
 if "%API_KEY%"=="" (
@@ -97,15 +100,12 @@ if "%RUNTIME_ENV%"=="" set RUNTIME_ENV=STAGING
 set /p VOLUME_NAME=Docker volume for SQLite [sign-gateway-sqlite]: 
 if "%VOLUME_NAME%"=="" set VOLUME_NAME=sign-gateway-sqlite
 
-set /p PLATFORM=Docker platform [linux/amd64]: 
-if "%PLATFORM%"=="" set PLATFORM=linux/amd64
-
 echo Preparing container and volume...
 docker volume create %VOLUME_NAME% >nul
 
 docker rm -f %CONTAINER_NAME% >nul 2>nul
 
-for /f %%i in ('docker run -d --name %CONTAINER_NAME% --platform %PLATFORM% -e "API_URL=%API_URL%" -e "API_KEY=%API_KEY%" -e "PASSWORD=%PASSWORD%" -e "ENV=%RUNTIME_ENV%" -v %VOLUME_NAME%:/data -p %HOST_PORT%:1303 %IMAGE_NAME%') do set CONTAINER_ID=%%i
+for /f %%i in ('docker run -d --name %CONTAINER_NAME% -e "API_URL=%API_URL%" -e "TSA_URL=%TSA_URL%" -e "API_KEY=%API_KEY%" -e "PASSWORD=%PASSWORD%" -e "ENV=%RUNTIME_ENV%" -v %VOLUME_NAME%:/data -p %HOST_PORT%:1303 %IMAGE_NAME%') do set CONTAINER_ID=%%i
 
 echo Install complete.
 echo Container ID: %CONTAINER_ID%

@@ -62,11 +62,11 @@ docker pull "$IMAGE_NAME"
 CONTAINER_NAME="$(prompt_default "Container name" "sign-gateway")"
 HOST_PORT="$(prompt_default "Host port" "1303")"
 API_URL="$(prompt_default "API_URL" "https://api.xignature.dev")"
+TSA_URL="$(prompt_default "TSA_URL" "http://tsa.xignature.co.id/signserver/process?workerName=DtaTsa")"
 API_KEY="$(prompt_required "API_KEY")"
 PASSWORD="$(prompt_required "PASSWORD (basic auth admin)")"
 RUNTIME_ENV="$(prompt_default "ENV" "STAGING")"
 VOLUME_NAME="$(prompt_default "Docker volume for SQLite" "sign-gateway-sqlite")"
-PLATFORM="$(prompt_default "Docker platform" "linux/amd64")"
 
 echo "Preparing container and volume..."
 docker volume create "$VOLUME_NAME" >/dev/null
@@ -75,8 +75,8 @@ docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
 
 CONTAINER_ID="$(docker run -d \
   --name "$CONTAINER_NAME" \
-  --platform "$PLATFORM" \
   -e API_URL="$API_URL" \
+  -e TSA_URL="$TSA_URL" \
   -e API_KEY="$API_KEY" \
   -e PASSWORD="$PASSWORD" \
   -e ENV="$RUNTIME_ENV" \
